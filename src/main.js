@@ -20,24 +20,25 @@ class App {
 
         if(repoInput.length === 0)
          return 0;
+        try {
+            const response = await api.get(`/repos/gabrieloureiro/${repoInput}`);
 
-        const response = await api.get(`/repos/gabrieloureiro/${repoInput}`);
+            const { name , description, html_url, owner: {avatar_url}} = response.data;
 
-        const { name , description, html_url, owner: {avatar_url}} = response.data;
+            this.repositories.push({
+                name,
+                description,
+                avatar_url,
+                html_url,
+            
+            });
 
-        this.repositories.push({
-            name,
-            description,
-            avatar_url,
-            html_url,
-        
-        });
 
-        this.inputEl.value = "";
+            this.render();
 
-        this.render();
-
-        console.log(this.repositories);
+        }catch(error){
+            alert("Esse repositório não existe. Por favor, digite um nome válido.")
+        }
     }
 
     render(){
@@ -64,6 +65,8 @@ class App {
             listItemEl.appendChild(linkEl);
 
             this.listEl.appendChild(listItemEl);
+
+            this.inputEl.value = "";
         });
     }
 }
